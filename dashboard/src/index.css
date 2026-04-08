@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Nunito:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary-* : initial;
+  --color-primary-50: #f4f8fe;
+  --color-primary-100: #e2effc;
+  --color-primary-400: #93c5fd;
+  --color-primary-500: #7baef4;
+  --color-primary-600: #5a8bd4;
+  --color-primary-900: #1e3a8a;
+  
+  --color-accent-* : initial;
+  --color-accent-50: #fef6f5;
+  --color-accent-100: #fee2e2;
+  --color-accent-400: #fca5a5;
+  --color-accent-500: #fea386;
+  
+  --color-success-100: #e0f8e9;
+  --color-success-400: #b9e5c4;
+  --color-success-500: #86d299;
+  
+  --color-warning-100: #fef9c3;
+  --color-warning-400: #fde047;
+  --color-warning-500: #fed269;
+  
+  --color-pink-100: #fce7f3;
+  --color-pink-400: #f4a7c0;
+  --color-pink-500: #f187a8;
+
+  --color-alert-100: #ffedd5;
+  --color-alert-500: #fb923c;
+  --color-alert-600: #ea580c;
+
+  --color-danger-100: #fee2e2;
+  --color-danger-500: #ef4444;
+
+  --color-background: #fdfbf7;
+  --color-surface: #fdfbf7;
+  
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: #47433d;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    color: #2b2824;
+  }
+}
+
+/* Wavy abstract divider element inspired by the photos */
+.wavy-line {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q 25 20, 50 10 T 100 10' fill='none' stroke='%237baef4' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  opacity: 0.5;
+}
+
+/* Fun decorative blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.blob-pink {
+  background-color: var(--color-pink-400);
+  transform: rotate(15deg);
+}
+
+.blob-yellow {
+  background-color: var(--color-warning-400);
+  width: 80px; height: 80px;
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+}
+
+.blob-blue {
+  background-color: var(--color-primary-400);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+/* A soft, flat card style with no drop shadow, just solid border & filled pastel bg */
+.pastel-card {
+  border: 2px solid rgba(0,0,0,0.05);
+  border-radius: 32px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pastel-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+.heading-flair {
+  position: relative;
+  display: inline-block;
+}
+.heading-flair::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background-color: var(--color-warning-400);
+  opacity: 0.4;
+  z-index: -1;
+  border-radius: 8px;
+}
