@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: popi-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn stage4_server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////data/popi.db
+    disk:
+      name: popi-db
+      mountPath: /data
+      sizeGB: 1
