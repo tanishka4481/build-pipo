@@ -79,16 +79,27 @@ This repo includes `render.yaml` for Blueprint deploy.
 
 1. Push this repository to GitHub.
 2. In Render, create a new Blueprint and select the repo.
-3. Ensure a persistent disk is mounted at `/data`.
-4. Confirm `DATABASE_URL` is set to `sqlite:////data/popi.db`.
+3. Use a free external Postgres database provider such as Supabase or Neon.
+4. Copy the Postgres connection string into `DATABASE_URL` in Render.
 5. Deploy and verify:
 
 ```text
-GET /health
+GET /healthz
 GET /ping
 ```
 
 Optional keep-warm on free tier: ping `/ping` every 10 minutes from cron-job.org.
+
+### Free Tier Database Plan
+
+Render Free does not support persistent disks, so the API now uses an external Postgres database.
+
+Recommended setup:
+
+1. Create a free Supabase project.
+2. Copy the PostgreSQL connection string from Supabase.
+3. Set `DATABASE_URL` in Render to that string.
+4. Keep `VITE_API_BASE_URL` pointed at the Render service in the frontend when deployed.
 
 ## Demo Day Run Order
 

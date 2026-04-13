@@ -39,6 +39,7 @@ import uuid
 import base64
 import asyncio
 import json
+from pathlib import Path
 from datetime import datetime, timezone, timedelta, date
 from contextlib import asynccontextmanager
 from typing import Optional
@@ -55,6 +56,7 @@ from sqlalchemy import (
     create_engine, Column, String, Float, Integer,
     Boolean, DateTime, Text, ForeignKey, JSON, func, text
 )
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 from stage1_preprocess import preprocess
@@ -80,8 +82,18 @@ except Exception:
         return raw_bytes
 
 # ── DB setup ───────────────────────────────────────────────────────────────────
-DB_URL  = os.getenv("DATABASE_URL", "sqlite:///./speech_therapy.db")
-engine  = create_engine(DB_URL, connect_args={"check_same_thread": False})
+DEFAULT_SQLITE_PATH = Path(__file__).with_name("speech_therapy.db")
+DB_URL = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_SQLITE_PATH.as_posix()}")
+
+
+def _build_engine(database_url: str):
+    url = make_url(database_url)
+    if url.get_backend_name() == "sqlite":
+        return create_engine(database_url, connect_args={"check_same_thread": False})
+    return create_engine(database_url, pool_pre_ping=True)
+
+
+engine  = _build_engine(DB_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base    = declarative_base()
 
@@ -182,7 +194,7 @@ Base.metadata.create_all(bind=engine)
 
 
 def _ensure_sqlite_columns() -> None:
-    if not DB_URL.startswith("sqlite"):
+    if make_url(DB_URL).get_backend_name() != "sqlite":
         return
     db = SessionLocal()
     try:
@@ -296,6 +308,11 @@ class AlertDismissRequest(BaseModel):
 @app.get("/health")
 async def health():
     return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+
+@app.get("/healthz")
+async def healthz():
+    return await health()
 
 
 @app.get("/ping")
